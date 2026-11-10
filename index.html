@@ -76,6 +76,9 @@ header {
 .mark { display: inline-flex; align-items: center; gap: 0.625rem; }
 .mark svg { width: 1.125rem; height: 1.125rem; color: var(--accent); flex: none; }
 .status {
+  align-self: flex-start;
+  margin: 0 0 1.75rem;
+  font: 400 0.8125rem/1 var(--mono);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -102,7 +105,7 @@ h1 {
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
-h1 span { color: var(--fg3); }
+h1 span { display: block; color: var(--fg3); }
 .lead {
   margin: 1.5rem 0 0;
   max-width: 34rem;
@@ -110,8 +113,22 @@ h1 span { color: var(--fg3); }
   color: var(--fg2);
   text-wrap: pretty;
 }
+.note {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  color: var(--fg);
+  font-weight: 500;
+}
+.caption {
+  margin: clamp(2.5rem, 7vh, 4rem) 0 0.875rem;
+  font: 400 0.75rem/1.5 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg3);
+}
 dl {
-  margin: clamp(2.5rem, 7vh, 4rem) 0 0;
+  margin: 0;
+  cursor: default;
   border-top: 1px solid var(--line);
 }
 dl div {
@@ -128,7 +145,7 @@ dt {
   color: var(--fg3);
 }
 dd { margin: 0; }
-dd strong { display: block; font-weight: 500; }
+dd strong { display: block; font-weight: 400; }
 dd span { display: block; color: var(--fg2); font-size: 0.9375rem; }
 footer {
   display: flex;
@@ -139,7 +156,6 @@ footer {
   color: var(--fg3);
 }
 @media (max-width: 34rem) {
-  header .status { padding: 0.375rem 0.625rem; }
   dl div { grid-template-columns: 1fr; }
 }
 </style>
@@ -155,13 +171,15 @@ footer {
       </svg>
       calendariosdeportivos.es
     </span>
-    <span class="status">Muy pronto</span>
   </header>
 
   <main>
+    <p class="status">Próximamente · Aún no disponible</p>
     <h1>Todos tus partidos y torneos, <span>en tu calendario.</span></h1>
     <p class="lead">Elige tu competición y suscríbete una vez. Las fechas, los horarios y sus cambios aparecerán solos en el calendario que ya usas, sin tener que volver a mirar.</p>
+    <p class="note">La web todavía no está abierta: estamos terminando la primera versión.</p>
 
+    <h2 class="caption">Lo que podrás seguir cuando abramos</h2>
     <dl>
       <div>
         <dt>Fútbol nacional</dt>
@@ -179,7 +197,7 @@ footer {
   </main>
 
   <footer>
-    <span>Estamos preparando la primera versión.</span>
+    <span>Disponible muy pronto.</span>
     <span>© <span id="y">2026</span></span>
   </footer>
 </div>
