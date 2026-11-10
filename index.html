@@ -23,18 +23,23 @@
 }
 :root {
   --bg: #f7f7f4;
+  --bg2: #ffffff;
+  --bg3: #f0f0ec;
   --line: #e4e3de;
   --fg: #15171a;
   --fg2: #4b5057;
   --fg3: #80858d;
   --accent: oklch(0.45 0.12 252);
   --accentSoft: oklch(0.95 0.028 252);
+  --shadow: 0 1px 2px rgba(18, 20, 24, 0.05), 0 24px 48px -16px rgba(18, 20, 24, 0.28);
   --sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0e1013;
+    --bg2: #16191d;
+    --bg3: #1b1f24;
     --line: #272c32;
     --fg: #eceef1;
     --fg2: #a6adb6;
@@ -76,6 +81,9 @@ header {
 .mark { display: inline-flex; align-items: center; gap: 0.625rem; }
 .mark svg { width: 1.125rem; height: 1.125rem; color: var(--accent); flex: none; }
 .status {
+  align-self: flex-start;
+  margin: 0 0 1.75rem;
+  font: 400 0.8125rem/1 var(--mono);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -102,7 +110,7 @@ h1 {
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
-h1 span { color: var(--fg3); }
+h1 span { display: block; color: var(--fg3); }
 .lead {
   margin: 1.5rem 0 0;
   max-width: 34rem;
@@ -110,26 +118,119 @@ h1 span { color: var(--fg3); }
   color: var(--fg2);
   text-wrap: pretty;
 }
-dl {
-  margin: clamp(2.5rem, 7vh, 4rem) 0 0;
-  border-top: 1px solid var(--line);
+.note {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  color: var(--fg);
+  font-weight: 500;
 }
-dl div {
+.caption {
+  margin: clamp(2.5rem, 7vh, 4rem) 0 0.875rem;
+  font: 400 0.75rem/1.5 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg3);
+}
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.row {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
   display: grid;
-  grid-template-columns: 9.5rem 1fr;
+  grid-template-columns: 9.5rem 1fr auto;
+  align-items: start;
   gap: 0.25rem 1.5rem;
-  padding: 1.125rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 0.875rem 0.75rem;
+  margin: 0.25rem -0.75rem;
+  width: calc(100% + 1.5rem);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease;
 }
-dt {
+.list li { border-bottom: 1px solid var(--line); }
+.row:hover { background: var(--bg3); }
+.row:active { background: var(--line); }
+.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.k {
   font: 400 0.75rem/1.9 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--fg3);
 }
-dd { margin: 0; }
-dd strong { display: block; font-weight: 500; }
-dd span { display: block; color: var(--fg2); font-size: 0.9375rem; }
+.v strong { display: block; font-weight: 400; }
+.v span { display: block; color: var(--fg2); font-size: 0.9375rem; }
+.chev { width: 1rem; height: 1rem; margin-top: 0.3rem; color: var(--fg3); transition: transform 0.15s ease, color 0.15s ease; }
+.row:hover .chev { color: var(--fg2); transform: translateX(2px); }
+
+/* Sheet */
+.sheet {
+  border: 0;
+  padding: 0;
+  color: var(--fg);
+  background: var(--bg2);
+  box-shadow: var(--shadow);
+  width: min(26rem, calc(100% - 2rem));
+  max-width: none;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+.sheet::backdrop { background: rgba(14, 16, 19, 0.42); backdrop-filter: blur(2px); }
+.sheet[open] { animation: pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.sheet[open]::backdrop { animation: fade 0.24s ease; }
+.sheet.closing { animation: pop-out 0.16s ease forwards; }
+.sheet.closing::backdrop { animation: fade-out 0.16s ease forwards; }
+.sheet-body { padding: 1.75rem 1.75rem 1.5rem; }
+.grip { display: none; }
+.sheet-mark {
+  width: 2.5rem; height: 2.5rem;
+  display: grid; place-items: center;
+  border-radius: 0.75rem;
+  background: var(--accentSoft);
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+.sheet-mark svg { width: 1.25rem; height: 1.25rem; }
+.sheet h2 { margin: 0; font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.sheet p { margin: 0.625rem 0 0; color: var(--fg2); text-wrap: pretty; }
+.sheet button.ok {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.8125rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sheet button.ok:hover { opacity: 0.9; }
+.sheet button.ok:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes pop-out { to { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes rise { from { transform: translateY(100%); } }
+@keyframes sink { to { transform: translateY(100%); } }
+@media (max-width: 34rem) {
+  .sheet {
+    width: 100%;
+    margin: auto 0 0;
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .sheet[open] { animation: rise 0.3s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .sheet.closing { animation: sink 0.2s ease-in forwards; }
+  .grip { display: block; width: 2.25rem; height: 0.25rem; border-radius: 99px; background: var(--line); margin: 0.625rem auto 0; }
+  .sheet-body { padding: 1.25rem 1.5rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet::backdrop, .sheet[open], .sheet[open]::backdrop, .sheet.closing, .sheet.closing::backdrop { animation: none !important; }
+}
 footer {
   display: flex;
   flex-wrap: wrap;
@@ -139,8 +240,8 @@ footer {
   color: var(--fg3);
 }
 @media (max-width: 34rem) {
-  header .status { padding: 0.375rem 0.625rem; }
-  dl div { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 1fr auto; }
+  .row .k { grid-column: 1 / -1; }
 }
 </style>
 </head>
@@ -155,34 +256,82 @@ footer {
       </svg>
       calendariosdeportivos.es
     </span>
-    <span class="status">Muy pronto</span>
   </header>
 
   <main>
+    <p class="status">Próximamente · Aún no disponible</p>
     <h1>Todos tus partidos y torneos, <span>en tu calendario.</span></h1>
     <p class="lead">Elige tu competición y suscríbete una vez. Las fechas, los horarios y sus cambios aparecerán solos en el calendario que ya usas, sin tener que volver a mirar.</p>
+    <p class="note">La web todavía no está abierta: estamos terminando la primera versión.</p>
 
-    <dl>
-      <div>
-        <dt>Fútbol nacional</dt>
-        <dd><strong>Competiciones de la RFEF</strong><span>Distintas categorías, de la élite a las ligas federadas.</span></dd>
-      </div>
-      <div>
-        <dt>Fútbol autonómico</dt>
-        <dd><strong>Federaciones territoriales</strong><span>Las ligas de tu comunidad, grupo a grupo.</span></dd>
-      </div>
-      <div>
-        <dt>Futbolín</dt>
-        <dd><strong>Torneos</strong><span>Fechas, lugares y carteles, en un solo sitio.</span></dd>
-      </div>
-    </dl>
+    <h2 class="caption">Lo que podrás seguir cuando abramos</h2>
+    <ul class="list">
+      <li><button type="button" class="row" data-topic="el fútbol nacional" aria-haspopup="dialog">
+        <span class="k">Fútbol nacional</span>
+        <span class="v"><strong>Competiciones de la RFEF</strong><span>Distintas categorías, de la élite a las ligas federadas.</span></span>
+        <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button></li>
+      <li><button type="button" class="row" data-topic="las ligas de tu comunidad" aria-haspopup="dialog">
+        <span class="k">Fútbol autonómico</span>
+        <span class="v"><strong>Federaciones territoriales</strong><span>Las ligas de tu comunidad, grupo a grupo.</span></span>
+        <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button></li>
+      <li><button type="button" class="row" data-topic="los torneos de futbolín" aria-haspopup="dialog">
+        <span class="k">Futbolín</span>
+        <span class="v"><strong>Torneos</strong><span>Fechas, lugares y carteles, en un solo sitio.</span></span>
+        <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button></li>
+    </ul>
   </main>
 
   <footer>
-    <span>Estamos preparando la primera versión.</span>
+    <span>Disponible muy pronto.</span>
     <span>© <span id="y">2026</span></span>
   </footer>
 </div>
-<script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+  <div class="grip" aria-hidden="true"></div>
+  <div class="sheet-body">
+    <div class="sheet-mark" aria-hidden="true">
+      <svg viewBox="0 0 18 18" fill="none">
+        <rect x="1.5" y="2.5" width="15" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M1.5 7h15M6 1v3M12 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="12" cy="11.75" r="1.75" fill="currentColor"/>
+      </svg>
+    </div>
+    <h2 id="sheet-title">Gracias por tu interés</h2>
+    <p>Todavía no está disponible. Muy pronto podrás seguir <span id="topic">todo esto</span> desde aquí, siempre al día en tu calendario.</p>
+    <button type="button" class="ok">Entendido</button>
+  </div>
+</dialog>
+<script>
+document.getElementById("y").textContent = new Date().getFullYear();
+(function () {
+  var sheet = document.getElementById("sheet");
+  var topic = document.getElementById("topic");
+  if (!sheet || typeof sheet.showModal !== "function") return;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function close() {
+    if (!sheet.open || sheet.classList.contains("closing")) return;
+    if (reduced.matches) { sheet.close(); return; }
+    sheet.classList.add("closing");
+    sheet.addEventListener("animationend", function done() {
+      sheet.removeEventListener("animationend", done);
+      sheet.classList.remove("closing");
+      sheet.close();
+    });
+  }
+  document.querySelectorAll(".row").forEach(function (row) {
+    row.addEventListener("click", function () {
+      topic.textContent = row.dataset.topic;
+      sheet.showModal();
+      sheet.querySelector(".ok").focus();
+    });
+  });
+  sheet.querySelector(".ok").addEventListener("click", close);
+  sheet.addEventListener("cancel", function (e) { e.preventDefault(); close(); });
+  sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
+})();
+</script>
 </body>
 </html>
